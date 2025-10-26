@@ -1,35 +1,53 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import Register from "./components/Register";
+import Login from "./components/Login";
+import Notepad from "./components/Notepad";
+import './index.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activeForm, setActiveForm] = useState("notepad"); // "register" | "login" | "notepad"
+  const [user, setUser] = useState(null);
+  const [notes, setNotes] = useState([]); // ✅ store notes globally
+
+  // ✅ Function to completely clear user session and data
+  const handleLogout = () => {
+    setUser(null);
+    setActiveForm("login");
+    setNotes([]); // clear notes
+    localStorage.clear(); // clear all stored data (token, user info, etc.)
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="app-container">
+      {/* Header */}
+      <header className="header">
+        <div className="header-left"><h1>Advanced Notepad</h1></div>
+        <div className="header-right">
+          {!user ? (
+            <>
+              <button onClick={() => setActiveForm("register")}>Register</button>
+              <button onClick={() => setActiveForm("login")}>Login</button>
+            </>
+          ) : (
+            <button onClick={handleLogout}>Logout</button>
+          )}
+        </div>
+      </header>
+
+      {/* Body */}
+      <main className="body-container">
+        {activeForm === "register" && (
+          <Register setUser={setUser} setActiveForm={setActiveForm} />
+        )}
+        {activeForm === "login" && (
+          <Login setUser={setUser} setActiveForm={setActiveForm} />
+        )}
+        {activeForm === "notepad" && (
+          <Notepad user={user} notes={notes} setNotes={setNotes} />
+        )}
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;
