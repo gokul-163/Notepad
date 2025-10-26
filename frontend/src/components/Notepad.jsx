@@ -9,7 +9,7 @@ export default function Notepad({ user }) {
 
   useEffect(() => {
     if (user && token) {
-      axios.get("http://localhost:5000/api/notes", {
+      axios.get("https://notepad-790f.onrender.com/api/notes", {
         headers: { Authorization: `Bearer ${token}` },
       }).then(res => setNotes(res.data))
         .catch(err => console.log(err.response?.data || err.message));
@@ -19,7 +19,7 @@ export default function Notepad({ user }) {
   const handleSave = async () => {
     if (!token) return alert("Please login first");
     try {
-      const res = await axios.post("http://localhost:5000/api/notes",
+      const res = await axios.post("https://notepad-790f.onrender.com/api/notes",
         { content: text },
         { headers: { Authorization: `Bearer ${token}` } }
       );
